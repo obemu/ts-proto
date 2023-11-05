@@ -5,6 +5,7 @@ import {
   FieldDescriptorProto_Label,
   FieldDescriptorProto_Type,
   FileDescriptorProto,
+  MessageOptions,
 } from "ts-proto-descriptors";
 import {
   basicLongWireType,
@@ -1330,6 +1331,8 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       {},
     );
 
+  const emitDefaultValuesForProto = ctx.options.emitDefaultValues.includes("proto-methods");
+
   // then add a case for each field
   messageDesc.field.forEach((field) => {
     const fieldName = getFieldName(field, options);
@@ -1491,8 +1494,12 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       `);
     } else if (isScalar(field) || isEnum(field)) {
+      const check = emitDefaultValuesForProto
+        ? `${messageProperty} !== undefined`
+        : notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`);
+
       chunks.push(code`
-        if (${notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)}) {
+        if (${check}) {
           ${writeSnippet(`${messageProperty}`)};
         }
       `);
@@ -2401,3 +2408,10 @@ function maybeReadonly(options: Options): string {
 function maybeAsAny(options: Options): string {
   return options.useReadonlyTypes ? " as any" : "";
 }
+
+function writeScalar(
+  ctx: Context,
+  field: FieldDescriptorProto,
+  messageOptions: MessageOptions | undefined,
+  place: string,
+) {}

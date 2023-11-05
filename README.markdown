@@ -533,6 +533,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--emitDefaultValues=json-methods`, the generated toJSON method will emit scalars like `0` and `""` as json fields.
 
+	`emitDefaultValues` can also be set as a `_`-delimited list of strings (comma is reserved as the flag delimited), i.e. `--emitDefaultValues=json-methods_proto-methods`, where including `proto-methods` will make is so that the generated encode method will emit scalars like `0` and `""` as message fields.
+
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).

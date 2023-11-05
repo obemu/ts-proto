@@ -40,7 +40,7 @@ export type Options = {
   forceLong: LongOption;
   globalThisPolyfill: boolean;
   useOptionals: boolean | "none" | "messages" | "all"; // boolean is deprecated
-  emitDefaultValues: Array<"json-methods">;
+  emitDefaultValues: Array<"json-methods" | "proto-methods">;
   useDate: DateOption;
   useMongoObjectId: boolean;
   oneof: OneofOption;
@@ -215,8 +215,8 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = (options.snakeToCamel as string).split("_") as any;
   }
 
-  if ((options.emitDefaultValues as any) === "json-methods") {
-    options.emitDefaultValues = ["json-methods"];
+  if (typeof options.emitDefaultValues === "string") {
+    options.emitDefaultValues = (options.emitDefaultValues as string).split("_") as any;
   } else {
     options.emitDefaultValues = [];
   }
